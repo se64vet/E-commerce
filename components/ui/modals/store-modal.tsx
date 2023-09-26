@@ -2,8 +2,11 @@
 'use client';
 
 import { z } from "zod";
+import  axios  from "axios"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 import { Modal } from "@/components/ui/modal";
 import { useStoreModal } from "@/hooks/use-store-modal";
@@ -22,6 +25,7 @@ const formSchema = z.object({
 
 
 export const StoreModal = () => {
+    const [loading, setLoading] = useState(false);
     const storeModal = useStoreModal(); // access states from zustand Store
 
     // 2. create form hook with react-hook-form & zod schema
@@ -37,27 +41,41 @@ export const StoreModal = () => {
     // 3. create onSubmit function
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         // create store in database
-        console.log(values)
+        try {
+            setLoading(true);
+            const response = await axios.post('/api/stores', values);
+
+            console.log(response.data);
+            toast.success("Store created!")
+        } catch (error) {
+            toast.error("Something went wrong!");
+        } finally {
+            setLoading(false);
+        }
     }
+    
     return (
         <Modal 
-            title="CREATE STORE"
-            description="Adding new store to the system"
-            isOpen={storeModal.isOpen}
-            onClose={storeModal.onClose}
+        title="CREATE STORE"
+        description="Adding new store to the system"
+        isOpen={storeModal.isOpen}
+        onClose={storeModal.onClose}
         >
             <div>
                 <div className="space-y-4 py-2 pb-4">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}>
                             <FormField
-                                control={form.control}
-                                name='name'
-                                render={({field}) => (
+                            control={form.control}
+                            name='name'
+                            render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Name</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="E-commerce" {...field}/>
+                                            <Input 
+                                            disabled={loading}
+                                            placeholder="E-commerce" 
+                                            {...field}/>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -65,11 +83,18 @@ export const StoreModal = () => {
                             />
                             <div className="pt-6 space-x-2 flex items-center justify-end">
                                 <Button 
-                                    variant={'ghost'} 
-                                    onClick={storeModal.onClose}>
-                                        Cancel
+                                disabled={loading}
+                                variant={'ghost'} 
+                                onClick={storeModal.onClose}
+                                >
+                                    Cancel
                                 </Button>
-                                <Button type="submit">Create</Button>
+                                <Button 
+                                type="submit"
+                                disabled={loading}
+                                >
+                                    Create
+                                </Button>
                             </div>
                         </form>
                     </Form>
