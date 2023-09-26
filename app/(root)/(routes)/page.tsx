@@ -17,9 +17,5 @@ export default function SetupPage() {
   
   }, [isOpen, onOpen])
   
-  return (
-    <div> ADMIN DASHBOARD 
-      <UserButton afterSignOutUrl="/"/>
-    </div>
-  )
+  return null;
 }
