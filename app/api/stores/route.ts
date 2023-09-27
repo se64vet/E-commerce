@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prismadb";
 
+// POST: "/api/stores" - CREATE NEW STORE
 export async function POST (req : Request){
     try {
         const {userId} = auth();

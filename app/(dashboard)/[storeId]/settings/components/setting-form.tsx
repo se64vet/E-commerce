@@ -6,6 +6,7 @@ import { Store } from "@prisma/client"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react"
+import { useParams, useRouter } from "next/navigation";
 
 
 import { Heading } from "@/components/ui/heading"
@@ -13,6 +14,8 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 // create Zod form schema & generate form type
 const formSchema = z.object({
@@ -32,8 +35,22 @@ export const SettingForm = ({initialData}:SettingFormProps) => {
   const [open, setOpen] = useState(false); // controlling alert modal
   const [loading, setLoading] = useState(false);
 
+  const params = useParams();
+  const router = useRouter()
+
   const onSubmit = async (data : SettingFormValues) => {
-    console.log(data);
+    try {
+      setLoading(true);
+      await axios.patch(`/api/stores/${params.storeId}`, data);
+      router.refresh()
+      toast.success("Store updated!")
+    } catch (error) {
+      toast.error("Something went wrong!")
+      console.log(error);
+    } finally {  
+      setLoading(false)
+    }
+    
   };
   return (
     <>
