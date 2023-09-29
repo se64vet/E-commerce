@@ -1,6 +1,7 @@
 'use client'
 
 import z from "zod"
+import axios from "axios";
 import { useState } from "react";
 import { Store } from "@prisma/client"
 import { useForm } from "react-hook-form"
@@ -15,7 +16,7 @@ import { Separator } from "@/components/ui/separator"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-hot-toast";
-import axios from "axios";
+import { DeleteModal } from "@/components/ui/modals/delete-modal";
 
 // create Zod form schema & generate form type
 const formSchema = z.object({
@@ -54,6 +55,12 @@ export const SettingForm = ({initialData}:SettingFormProps) => {
   };
   return (
     <>
+      <DeleteModal 
+      storeId={initialData.id} 
+      open={open} 
+      setClose={ ()=> setOpen(false)}
+      />
+      
       <div className="flex items-center justify-between">
         <Heading
         title="Settings"
@@ -61,10 +68,11 @@ export const SettingForm = ({initialData}:SettingFormProps) => {
         <Button
         disabled={loading}
         variant={"destructive"}
-        size={"icon"}
+        size={"default"}
         onClick={()=> setOpen(true)}
         >
-          <Trash className="h-4 w-4" />
+          <Trash className="h-4 w-4 mr-2" />
+          <span>Delete Store</span>
         </Button>
       </div>
 
