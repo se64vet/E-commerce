@@ -1,46 +1,34 @@
 'use client'
 
-import axios from 'axios';
-import { useState } from 'react';
-import { toast } from 'react-hot-toast';
-
 import { Modal } from '@/components/ui/modal'
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 
 interface deleteModalProps {
-    storeId: string,
+    loading: boolean,
     open : boolean
     setClose : ()=>void,
+    onConfirm : ()=>void,
+
+    title?: string,
+    description?: string
 }
 
-export const DeleteModal = ({storeId, open, setClose} : deleteModalProps) => {
-    const [loading, setLoading] = useState(false);
+export const DeleteModal = ({
+    loading, 
+    open, 
+    setClose, 
+    onConfirm,
+    title = "Are you sure?",
+    description = "This action cannot be undone"
+} : deleteModalProps) => {
     const router = useRouter();
-
-    const onDelete = async () => {
-        try {
-            setLoading(true)
-            await axios.delete(`/api/stores/${storeId}`);
-            setClose();
-            toast.success("Store deleted")
-            router.push("/")
-        } catch (error) {
-            toast.error("Something wrong happend.")
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    const onCancel = () => {
-        setClose();
-    }
 
   return (
     <>
         <Modal 
-        title='Are you sure?' 
-        description='Deleted store will not be able to restored'
+        title={title}
+        description={description}
         isOpen ={open}
         onClose={setClose}
         >
@@ -48,14 +36,14 @@ export const DeleteModal = ({storeId, open, setClose} : deleteModalProps) => {
                 <Button 
                 disabled={loading} 
                 variant={'outline'}
-                onClick={onCancel}
+                onClick={setClose}
                 >
                     Cancel
                 </Button>
                 <Button
                 disabled={loading}
                 variant={"destructive"}
-                onClick={onDelete}
+                onClick={onConfirm}
                 >
                     {loading?"Please wait...":"Delete"}
                 </Button>

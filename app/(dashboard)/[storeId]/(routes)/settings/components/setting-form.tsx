@@ -44,26 +44,42 @@ export const SettingForm = ({initialData}:SettingFormProps) => {
       setLoading(true);
       await axios.patch(`/api/stores/${params.storeId}`, data);
       router.refresh()
-      toast.success("Store updated!")
+      toast.success("Store updated")
     } catch (error) {
-      toast.error("Something went wrong!")
+      toast.error("Something went wrong")
       console.log(error);
     } finally {  
       setLoading(false)
     }
     
   };
+
+  const onDelete = async () => {
+    try {
+        setLoading(true)
+        await axios.delete(`/api/stores/${params.storeId}`);
+        setOpen(false);
+        toast.success("Store deleted")
+        router.refresh();
+        router.push("/");
+    } catch (error) {
+        toast.error("Something wrong happend.")
+    } finally {
+        setLoading(false)
+    }
+}
   return (
     <>
       <DeleteModal 
-      storeId={initialData.id} 
+      loading={loading}
       open={open} 
       setClose={ ()=> setOpen(false)}
+      onConfirm={onDelete}
       />
-      
+
       <div className="flex items-center justify-between">
         <Heading
-        title="Settings"
+        title="Store Settings"
         />
         <Button
         disabled={loading}

@@ -1,7 +1,6 @@
 'use client'; 
 
 import { useEffect } from "react";
-import { UserButton } from "@clerk/nextjs";
 
 import { useStoreModal } from "@/hooks/use-store-modal";
 
