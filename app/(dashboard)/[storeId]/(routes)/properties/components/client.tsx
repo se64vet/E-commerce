@@ -30,6 +30,7 @@ export const PropertiesClient = ({colors, sizes} : PropertiesClientProps) => {
       <SizeFormModal
       open={sizeModal.isOpen}
       setClose={sizeModal.onClose} 
+      initialData={null}
       />
 
       <div className="flex items-center justify-between">

@@ -18,6 +18,7 @@ Form,
     FormLabel, 
     FormMessage 
 } from '@/components/ui/form'
+import { ColorColumn } from './columns'
 
 //create zod form schema
 const formSchema = zod.object({
@@ -31,7 +32,7 @@ const formSchema = zod.object({
 type ColorFormValues = zod.infer<typeof formSchema>
 
 interface ColorFormModalProps {
-    initialData: Color | null
+    initialData: Color | ColorColumn | null
     open: boolean
     setClose: ()=>void,
 }
@@ -68,8 +69,7 @@ export const ColorFormModal = ({initialData,open, setClose} : ColorFormModalProp
                 await axios.patch(`/api/${params.storeId}/colors/${initialData?.id}`, data)
             }
 
-            router.refresh();
-            router.push(`/${params.storeId}/properties`)
+            location.reload();
             toast.success(toastMessage);
             setClose()
         } 

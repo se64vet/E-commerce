@@ -6,7 +6,11 @@ import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 
+import { useWindowLocation } from "@/hooks/use-location";
 import { Button } from "@/components/ui/button";
+import { DeleteModal } from "@/components/ui/modals/delete-modal";
+import { ColorColumn } from "./columns";
+import { ColorFormModal } from "./form-modal";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -14,9 +18,6 @@ import {
   DropdownMenuLabel, 
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { DeleteModal } from "@/components/ui/modals/delete-modal";
-
-import { ColorColumn } from "./columns";
 
 interface CellActionProps {
   data: ColorColumn;
@@ -29,6 +30,7 @@ export const CellAction: React.FC<CellActionProps> = ({
   const params = useParams();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false)
 
   const onConfirm = async () => {
     try {
@@ -36,7 +38,7 @@ export const CellAction: React.FC<CellActionProps> = ({
       await axios.delete(`/api/${params.storeId}/colors/${data.id}`);
       toast.success('color deleted.');
       router.refresh();
-      router.push(`/${params.storeId}/properties`)
+      router.push(`/${params.storeId}/properties`, {scroll: true})
     } catch (error) {
       toast.error('There is a product using this color!');
     } finally {
@@ -47,7 +49,7 @@ export const CellAction: React.FC<CellActionProps> = ({
 
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
-    toast.success('Billboard ID copied to clipboard.');
+    toast.success('ID copied to clipboard.');
   }
 
   return (
@@ -57,6 +59,11 @@ export const CellAction: React.FC<CellActionProps> = ({
         setClose={() => setOpen(false)}
         onConfirm={onConfirm}
         loading={loading}
+      />
+      <ColorFormModal
+      open = {editModalOpen}
+      setClose={() => setEditModalOpen(false)}
+      initialData={data}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -72,6 +79,13 @@ export const CellAction: React.FC<CellActionProps> = ({
           >
             <Copy className="mr-2 h-4 w-4" /> Copy Id
           </DropdownMenuItem>
+          {/* ------------------ */}
+          <DropdownMenuItem
+            onClick={() => setEditModalOpen(true)}
+          >
+            <Edit className="mr-2 h-4 w-4" /> Update
+          </DropdownMenuItem>
+          {/* ------------------ */}
           <DropdownMenuItem
             onClick={() => setOpen(true)}
           >

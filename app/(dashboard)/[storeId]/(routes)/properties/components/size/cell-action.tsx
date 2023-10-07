@@ -16,9 +16,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DeleteModal } from "@/components/ui/modals/delete-modal";
 
-import { SizeColumn } from "./columns";
-import { useSizeModal } from "@/hooks/use-properties-modal";
-
+import { SizeColumn } from "./columns"; 
+import { SizeFormModal } from "./form-modal";
 interface CellActionProps {
   data: SizeColumn;
 }
@@ -29,7 +28,7 @@ export const CellAction = ({data,} : CellActionProps) => {
   const params = useParams();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const sizeModal = useSizeModal()
+  const [editModalOpen, setEditModalOpen] = useState(false)
 
   const onConfirm = async () => {
     try {
@@ -37,7 +36,7 @@ export const CellAction = ({data,} : CellActionProps) => {
       await axios.delete(`/api/${params.storeId}/sizes/${data.id}`);
       toast.success('size deleted.');
       router.refresh();
-      router.push(`/${params.storeId}/properties`)
+      router.push(`/${params.storeId}/properties`, {scroll: true})
     } catch (error) {
       toast.error('There is a product using this size!');
     } finally {
@@ -48,7 +47,7 @@ export const CellAction = ({data,} : CellActionProps) => {
 
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
-    toast.success('Billboard ID copied to clipboard.');
+    toast.success('ID copied to clipboard.');
   }
 
   return (
@@ -58,6 +57,11 @@ export const CellAction = ({data,} : CellActionProps) => {
         setClose={() => setOpen(false)}
         onConfirm={onConfirm}
         loading={loading}
+      />
+      <SizeFormModal
+      open = {editModalOpen}
+      setClose={() => setEditModalOpen(false)}
+      initialData={data}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -74,7 +78,13 @@ export const CellAction = ({data,} : CellActionProps) => {
           >
             <Copy className="mr-2 h-4 w-4" /> Copy Id
           </DropdownMenuItem>
-
+        {/* ------------------ */}
+          <DropdownMenuItem
+            onClick={() => setEditModalOpen(true)}
+          >
+            <Edit className="mr-2 h-4 w-4" /> Update
+          </DropdownMenuItem>
+        {/* ------------------ */}
           <DropdownMenuItem
             onClick={() => setOpen(true)}
           >

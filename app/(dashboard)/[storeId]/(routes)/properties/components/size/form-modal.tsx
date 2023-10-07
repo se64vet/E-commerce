@@ -19,6 +19,7 @@ Form,
     FormMessage 
 } from '@/components/ui/form'
 import { useSizeModal } from '@/hooks/use-properties-modal'
+import { SizeColumn } from './columns'
 
 //create zod form schema
 const formSchema = zod.object({
@@ -30,34 +31,29 @@ const formSchema = zod.object({
 type SizeFormValues = zod.infer<typeof formSchema>
 
 interface SizeFormModalProps {
+    initialData: Size | SizeColumn | null
     open: boolean
     setClose: ()=>void,
 }
-export const SizeFormModal = ({open, setClose} : SizeFormModalProps) => {
+export const SizeFormModal = ({initialData, open, setClose} : SizeFormModalProps) => {
     // hooks vars
     const params = useParams();
     const router = useRouter();
-    const sizeModal = useSizeModal()
     // check for initial data
-    let initialData: Size = {
-        id: "",
-        name: "",
-        storeId: "",
-        value: "",
-        createdAt: new Date(),
-        updatedAt: new Date()
-    }
 
-    // default true for v1.0.0; will be update later
-    let isCreateNew : boolean = true;// is creating new or updating
     
     // create default form values
     const form = useForm<SizeFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData
+        defaultValues: initialData || 
+        {
+            value: "",
+            name: ""
+        }
     })
 
     // dynamic content vars
+    const isCreateNew = initialData ? false : true; // is creating new or updating
     const title = isCreateNew ? "Create" : "Edit";
     const desciption = isCreateNew ? "Adding new size" : "Edit size";
     const action = isCreateNew ? "Create" : "Save changes"
@@ -77,10 +73,9 @@ export const SizeFormModal = ({open, setClose} : SizeFormModalProps) => {
                 await axios.patch(`/api/${params.storeId}/sizes/${initialData?.id}`, data)
             }
 
-            router.refresh();
-            router.push(`/${params.storeId}/properties`)
-            toast.success(toastMessage);
             setClose()
+            toast.success(toastMessage);
+            location.reload()
         } 
         catch (error) {
             toast.error("Something went wrong.")
@@ -95,8 +90,8 @@ export const SizeFormModal = ({open, setClose} : SizeFormModalProps) => {
         title={title}
         description={desciption}
         isOpen = {open}
-        onClose={setClose}>
-
+        onClose={setClose}
+        >
         <Form {...form}>
             <form 
             onSubmit={form.handleSubmit(onSubmit)}
@@ -112,7 +107,7 @@ export const SizeFormModal = ({open, setClose} : SizeFormModalProps) => {
                         <FormControl>
                             <Input 
                             disabled={loading}
-                            placeholder='extra small'
+                            placeholder='XS'
                             className="lg:w-1/2"
                             {...field}
                             />
@@ -131,7 +126,7 @@ export const SizeFormModal = ({open, setClose} : SizeFormModalProps) => {
                         <FormControl>
                             <Input 
                             disabled={loading}
-                            placeholder='XS'
+                            placeholder='Extra small'
                             className="lg:w-1/2"
                             {...field}
                             />
