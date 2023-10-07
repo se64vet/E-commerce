@@ -8,21 +8,6 @@ interface CategoryPageProps {
 }
 const CategoryPage = async ({params} : CategoryPageProps) => {
 
-  // const billboards = await prismadb.billboard.findMany({
-  //   where: {
-  //     storeId: params.storeId
-  //   },
-  //   orderBy: {
-  //     createdAt: 'desc'
-  //   }
-  // });
-
-  // const formattedBillboards: BillboardColumn[] = billboards.map((item) => ({
-  //   id: item.id,
-  //   label: item.label,
-  //   createdAt: format(item.createdAt, 'MMMM do, yyyy'),
-  // }));
-
   const categories =  await prismadb.category.findMany({
     where:{
       storeId: params.storeId

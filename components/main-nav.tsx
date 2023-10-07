@@ -33,6 +33,11 @@ export function MainNav ({
             label: 'Categories',
             active: pathname === `/${params.storeId}/categories`,
         },
+        {
+            href: `/${params.storeId}/properties`,
+            label: 'Properties',
+            active: pathname === `/${params.storeId}/properties`,
+        },
     ];
 
     return (
