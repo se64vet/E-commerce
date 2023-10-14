@@ -8,17 +8,17 @@ import Image from 'next/image';
 import { ImagePlus, Trash } from 'lucide-react';
 
 interface ImageUploadProps {
-  disabled?: boolean;
+  loading?: boolean;
   onChange: (value: string) => void;
   onRemove: (value: string) => void;
-  value: string[];
+  values: string[];
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({
-  disabled,
+export const ImageUpload: React.FC<ImageUploadProps> = ({
+  loading,
   onChange,
   onRemove,
-  value
+  values
 }) => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -38,7 +38,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   return ( 
     <div>
       <div className="mb-4 flex items-center gap-4">
-        {value.map((url) => (
+        {values.map((url) => (
           <div key={url} className="relative w-[200px] h-[200px] rounded-md overflow-hidden">
             <div className="z-10 absolute top-2 right-2">
               <Button type="button" onClick={() => onRemove(url)} variant="destructive" size="sm">
@@ -63,7 +63,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           return (
             <Button 
               type="button" 
-              disabled={disabled} 
+              disabled={loading} 
               variant="secondary" 
               onClick={onClick}
             >
@@ -77,4 +77,3 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   );
 }
  
-export default ImageUpload;

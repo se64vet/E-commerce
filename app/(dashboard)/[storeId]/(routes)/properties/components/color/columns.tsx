@@ -10,11 +10,16 @@ export type ColorColumn = {
   value: string;
   createdAt: string;
 }
-
+const toSentenceCase = (str : string) : string => {
+  return str.toLowerCase().split(' ').map(function(word) {
+    return word.replace(word[0], word[0].toUpperCase());
+  }).join(' ');
+}
 export const columns: ColumnDef<ColorColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
+    cell : ({row}) => (<div>{toSentenceCase(row.original.name)}</div>)
   },
   {
     accessorKey: "value",

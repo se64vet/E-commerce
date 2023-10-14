@@ -10,15 +10,21 @@ export type SizeColumn = {
   value: string
   createdAt: string;
 }
-
+const toSentenceCase = (str : string) : string => {
+  return str.toLowerCase().split(' ').map(function(word) {
+    return word.replace(word[0], word[0].toUpperCase());
+  }).join(' ');
+}
 export const columns: ColumnDef<SizeColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
+    cell : ({row}) => (<div>{row.original.name.toUpperCase()}</div>)
   },
   {
     accessorKey: "value",
     header: "Description",
+    cell : ({row}) => (<div>{toSentenceCase(row.original.value)}</div>)
   },
   {
     accessorKey: "createdAt",

@@ -10,8 +10,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'e-commerce--admin site',
-  description: 'admin dashboard for e-commerce website',
+  title: 'Dashboard',
+  description: 'Ecommerce Admin Dashboard',
 }
 
 export default function RootLayout({

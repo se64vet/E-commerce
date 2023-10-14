@@ -25,7 +25,7 @@ import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 import { DeleteModal } from "@/components/ui/modals/delete-modal"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import ImageUpload from "@/components/ui/image-upload"
+import { ImageUpload } from "@/components/ui/image-upload"
 import { Checkbox } from "@/components/ui/checkbox"
 
 const formSchema = z.object({
@@ -151,8 +151,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 <FormLabel>Images</FormLabel>
                 <FormControl>
                   <ImageUpload 
-                    value={field.value.map((image) => image.url)} 
-                    disabled={loading} 
+                    values={field.value.map((image) => image.url)} 
+                    loading={loading} 
                     onChange={(url) => field.onChange([...field.value, { url }])}
                     onRemove={(url) => field.onChange([...field.value.filter((current) => current.url !== url)])}
                   />

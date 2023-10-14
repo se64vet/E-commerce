@@ -16,10 +16,18 @@ export type ProductColumn = {
   isArchived: boolean;
 }
 
+const toSentenceCase = (word: string) : string => {
+  return word.charAt(0).toLocaleUpperCase() + word.slice(1);
+}
+const toYesNo = (bool : boolean) : string => {
+  const resStr = bool ? 'Yes' : 'No';
+  return resStr;
+}
 export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
+    cell : ({row}) => (<div>{toSentenceCase(row.original.name)}</div>)
   },
   {
     accessorKey: "price",
@@ -28,6 +36,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "category",
     header: "Category",
+    cell : ({row}) => (<div>{toSentenceCase(row.original.name)}</div>)
   },
   {
     accessorKey: "size",
@@ -46,10 +55,12 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "isArchived",
     header: "Archived",
+    cell : ({row}) => (<div>{toYesNo(row.original.isArchived)}</div>)
   },
   {
     accessorKey: "isFeatured",
     header: "Featured",
+    cell : ({row}) => (<div>{toYesNo(row.original.isFeatured)}</div>)
   },
   {
     accessorKey: "createdAt",
